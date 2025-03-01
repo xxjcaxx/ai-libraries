@@ -5,5 +5,7 @@ project('chessintionlib', 'cpp',
 
 shared_library('chessintionlib', sources: ['chessintionlib.cpp'],
 
-    install: false)
+    install: false,
+    link_args: ['-static-libstdc++', '-static-libgcc']  # Statically link stdc++
+    )
 
