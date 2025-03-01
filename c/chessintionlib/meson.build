@@ -13,3 +13,4 @@ shared_library('chessintionlib', sources: ['chessintionlib.cpp'],
     ]  # Statically link stdc++
     )
 
+ 
