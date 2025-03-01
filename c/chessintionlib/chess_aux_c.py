@@ -2,7 +2,7 @@ import ctypes
 import numpy as np
 
 # Load the shared library (adjust path to the .so file)
-chess_extension = ctypes.CDLL('./build/libchessintionlib.so')  # Adjust path to your compiled shared library
+chess_extension = ctypes.CDLL('./libchessintionlib.so')  # Adjust path to your compiled shared library
 
 # Define the function signatures of the C++ functions in the shared library
 
