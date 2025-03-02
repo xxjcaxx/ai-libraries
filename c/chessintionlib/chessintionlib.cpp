@@ -60,11 +60,11 @@ extern "C"
         // Extract the bit at the current position
         if (((bbw >> (63 - i)) & 1) == 1)
         {
-          white_matrix[row][col] = 1;
+          white_matrix[row][7-col] = 1;
         }
         if (((bbb >> (63 - i)) & 1) == 1)
         {
-          black_matrix[row][col] = 1;
+          black_matrix[row][7-col] = 1;
         }
       }
 
@@ -120,22 +120,56 @@ extern "C"
 
   using Matrix3DMoves = std::array<std::array<std::array<int, 8>, 8>, 64>;
 
+
   Matrix3DMoves legal_moves_to_64_8_8(const Board &board)
   {
     Matrix3DMoves array6488 = {}; // Initialize to all zeros
     initialize_codes();
     // Get legal moves
-
+//std::cout << board.chess960() << std::endl;
     Movelist legal_moves;
     movegen::legalmoves(legal_moves, board);
 
-    for (const auto &move : legal_moves)
+    for (auto move : legal_moves)
     { // square.rank();
-      // std::cout << move << std::endl;
+    if (move.typeOf() == Move::CASTLING) {
+      std::cout << "enroque"  << move << std::endl;
+        std::string move_str = uci::moveToUci(move);
+        std::string from_str = move_str.substr(0, 2);
+    std::string to_str = move_str.substr(2, 2);
+        Square from_sq = Square(from_str);
+    Square to_sq = Square(to_str);
+
+        move = Move::make<Move::NORMAL>(from_sq, to_sq);
+        std::cout << "enroque"  << move << std::endl;
+    }
+       std::cout << move << std::endl;
       int from_rank = move.from().rank();
       int from_file = move.from().file();
       int to_rank = move.to().rank();
       int to_file = move.to().file();
+
+     /* if (move.typeOf() == Move::CASTLING) {
+        
+        // Create UCI string representation of the move (e.g., "e8a8", "e8h8")
+            std::string move_str = uci::moveToUci(move);
+std::cout << "enroque" << to_rank << move_str << std::endl;
+            if (move_str == "e8a8") {
+                to_rank = 2;
+            }
+            else if (move_str == "e8h8") {
+                to_rank = 6;
+            }
+            else if (move_str == "e1a1") {
+               to_rank = 2;
+            }
+            else if (move_str == "e1h1") {
+                to_rank = 6;
+            }
+            std::cout << "enroque" << to_rank << std::endl;
+    }*/
+
+
       // Compute encoded move
       std::pair<int, int> move_vector = {to_file - from_file, to_rank - from_rank};
       // std::cout << "(" << move_vector.first << ", " << move_vector.second << ")" << std::endl;
@@ -174,7 +208,7 @@ extern "C"
     // Lookup move code
     if (codes.find(move_vector) == codes.end())
     {
-      std::cerr << "Error: Move not found in codes!" << std::endl;
+      //std::cerr << "Error: Move not found in codes!" << std::endl;
       return -1;
     }
     int move_code = codes[move_vector];
@@ -219,7 +253,7 @@ extern "C"
   const int *concat_fen_legal(const char *fen)
   {
     std::string fen_string(fen);
-    std::cerr << "fen:" << fen_string << std::endl;
+   // std::cerr << "fen:" << fen_string << std::endl;
 
     chess::Board board(fen_string); // Load FEN into board
 
@@ -242,7 +276,7 @@ extern "C"
       (*fen_matrix_legal_moves)[13 + i] = legal_moves[i];
     }
 
-    std::cout << "Concatenated board and legal moves generated!" << std::endl;
+    //std::cout << "Concatenated board and legal moves generated!" << std::endl;
 
     return &(*fen_matrix_legal_moves)[0][0][0];
   }

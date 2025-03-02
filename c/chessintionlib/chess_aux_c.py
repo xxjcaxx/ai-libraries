@@ -2,7 +2,7 @@ import ctypes
 import numpy as np
 
 # Load the shared library (adjust path to the .so file)
-chess_extension = ctypes.CDLL('ai-libraries/c/chessintionlib/libchessintionlib.so')  # Adjust path to your compiled shared library
+chess_extension = ctypes.CDLL('/home/jose/repositorisIES/ai-libraries/c/chessintionlib/build/libchessintionlib.so')  # Adjust path to your compiled shared library
 
 # Define the function signatures of the C++ functions in the shared library
 
@@ -45,10 +45,10 @@ def concat_fen_legal(fen):
     size = 77 * 8 * 8  # Total number of elements
     result_ptr = ctypes.cast(result_ptr, ctypes.POINTER(ctypes.c_int * size)).contents
     result_array = np.ctypeslib.as_array(result_ptr, shape=(77 * 8 * 8,))
-    reshaped_result = result_array.reshape(77, 8, 8)
+    reshaped_result = result_array.reshape(77, 8, 8).astype(bool)
     return reshaped_result
 
 
-print(uci_to_number('c2c3'))
-print(number_to_uci(50))
-print(concat_fen_legal('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'))
+#print(uci_to_number('c2c3'))
+#print(number_to_uci(50))
+#print(concat_fen_legal('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'))
