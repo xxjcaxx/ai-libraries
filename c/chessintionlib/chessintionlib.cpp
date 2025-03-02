@@ -133,7 +133,7 @@ extern "C"
     for (auto move : legal_moves)
     { // square.rank();
     if (move.typeOf() == Move::CASTLING) {
-      std::cout << "enroque"  << move << std::endl;
+   //   std::cout << "enroque"  << move << std::endl;
         std::string move_str = uci::moveToUci(move);
         std::string from_str = move_str.substr(0, 2);
     std::string to_str = move_str.substr(2, 2);
@@ -141,9 +141,9 @@ extern "C"
     Square to_sq = Square(to_str);
 
         move = Move::make<Move::NORMAL>(from_sq, to_sq);
-        std::cout << "enroque"  << move << std::endl;
+     //   std::cout << "enroque"  << move << std::endl;
     }
-       std::cout << move << std::endl;
+      // std::cout << move << std::endl;
       int from_rank = move.from().rank();
       int from_file = move.from().file();
       int to_rank = move.to().rank();
