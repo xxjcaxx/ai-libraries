@@ -250,12 +250,11 @@ std::cout << "enroque" << to_rank << move_str << std::endl;
 
   using Matrix3D77 = std::array<std::array<std::array<int, 8>, 8>, 77>;
   using PackedArray = std::array<uint8_t, 616>;
-  
+  PackedArray packed_data = {};
 
   const PackedArray* concat_fen_legal(const char *fen)
   {
-    PackedArray packed_data = {};
-    
+    packed_data = {};
     std::string fen_string(fen);
    // std::cerr << "fen:" << fen_string << std::endl;
 
