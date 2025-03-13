@@ -1,5 +1,6 @@
 import ctypes
 import numpy as np
+import torch
 
 # Load the shared library (adjust path to the .so file)
 chess_extension = ctypes.CDLL('ai-libraries/c/chessintionlib/libchessintionlib.so')  # Adjust path to your compiled shared library
@@ -27,8 +28,8 @@ chess_extension.number_to_uci.restype = ctypes.c_char_p
 
 
 chess_extension.concat_fen_legal.argtypes = [ctypes.c_char_p]
-chess_extension.concat_fen_legal.restype = ctypes.POINTER(ctypes.c_int * 77*8*8)  # This should return a pointer to an array
-
+#chess_extension.concat_fen_legal.restype = ctypes.POINTER(ctypes.c_int * 77*8*8)  # This should return a pointer to an array
+chess_extension.concat_fen_legal.restype = ctypes.POINTER(ctypes.c_uint8 * 616)
 
 
 def uci_to_number(uci_move):
@@ -42,12 +43,16 @@ def concat_fen_legal(fen):
     fen_bytes = fen.encode('utf-8')
     # Call concat_fen_legal from the shared library
     result_ptr = chess_extension.concat_fen_legal(fen_bytes)
-    size = 77 * 8 * 8  # Total number of elements
-    result_ptr = ctypes.cast(result_ptr, ctypes.POINTER(ctypes.c_int * size)).contents
-    result_array = np.ctypeslib.as_array(result_ptr, shape=(77 * 8 * 8,))
-    reshaped_result = result_array.reshape(77, 8, 8).astype(bool)
-    return reshaped_result
+    #size = 77 * 8 * 8  # Total number of elements
+    #result_ptr = ctypes.cast(result_ptr, ctypes.POINTER(ctypes.c_int * size)).contents
+    #result_array = np.ctypeslib.as_array(result_ptr, shape=(77 * 8 * 8,))
+    #reshaped_result = result_array.reshape(77, 8, 8).astype(bool)
+    #return reshaped_result
 
+    compressed_tensor = torch.tensor(list(result_ptr.contents), dtype=torch.uint8, device="cuda")
+    bit_tensor = torch.unpackbits(compressed_tensor).to(dtype=torch.bool)
+    bit_tensor = bit_tensor.view(77, 8, 8)
+    return bit_tensor
 
 #print(uci_to_number('c2c3'))
 #print(number_to_uci(50))

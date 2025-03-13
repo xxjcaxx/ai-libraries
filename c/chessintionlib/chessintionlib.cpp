@@ -249,8 +249,10 @@ std::cout << "enroque" << to_rank << move_str << std::endl;
   }
 
   using Matrix3D77 = std::array<std::array<std::array<int, 8>, 8>, 77>;
+  using PackedArray = std::array<uint8_t, 616>;
+  static PackedArray packed_data = {};
 
-  const int *concat_fen_legal(const char *fen)
+  const PackedArray* concat_fen_legal(const char *fen)
   {
     std::string fen_string(fen);
    // std::cerr << "fen:" << fen_string << std::endl;
@@ -278,7 +280,23 @@ std::cout << "enroque" << to_rank << move_str << std::endl;
 
     //std::cout << "Concatenated board and legal moves generated!" << std::endl;
 
-    return &(*fen_matrix_legal_moves)[0][0][0];
+    //return &(*fen_matrix_legal_moves)[0][0][0];
+    int bit_index = 0;
+    for (int i = 0; i < 77; i++) {
+        for (int j = 0; j < 8; j++) {
+            for (int k = 0; k < 8; k++) {
+                int byte_pos = bit_index / 8;
+                int bit_pos = bit_index % 8;
+
+                if ((*fen_matrix_legal_moves)[i][j][k]) {
+                    packed_data[byte_pos] |= (1 << bit_pos);
+                }
+                bit_index++;
+            }
+        }
+    }
+
+    return &packed_data;
   }
 
   int add(int a, int b)
