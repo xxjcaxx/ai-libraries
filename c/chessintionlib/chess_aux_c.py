@@ -63,7 +63,7 @@ def concat_fen_legal(fen):
 
 def concat_fen_legal_bits(fen):
     fen_bytes = fen.encode('utf-8')
-    board_ptr =  = chess_extension.concat_fen_legal(fen_bytes)
+    board_ptr =   chess_extension.concat_fen_legal(fen_bytes)
     compressed_tensor = torch.tensor(list(board_ptr.contents), dtype=torch.uint8, device="cuda")
     bit_tensor = ((compressed_tensor[:, None] >> torch.arange(8, device="cuda")) & 1).to(torch.float32)
 
