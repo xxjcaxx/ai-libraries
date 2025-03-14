@@ -3,7 +3,7 @@ import numpy as np
 import cProfile
 import pstats
 
-chess_extension = ctypes.CDLL('./c/chessintionlib/libchessintionlib.so') 
+chess_extension = ctypes.CDLL('./c/chessintionlib/build/libchessintionlib.so') 
 
 
 chess_extension.concat_fen_legal.argtypes = [ctypes.c_char_p]
@@ -69,16 +69,18 @@ def bench(n):
             b = concat_fen_legal(j)
             print(np.array_equal(a, b))
 
-cProfile.run('bench(2)', 'output.prof')
+#cProfile.run('bench(2)', 'output.prof')
 
 # Print sorted profiling results (100 simulations) 19.466 seconds
-p = pstats.Stats('output.prof')
-p.strip_dirs().sort_stats('cumulative').print_stats(20)  # Top 10 slowest functions
+#p = pstats.Stats('output.prof')
+#p.strip_dirs().sort_stats('cumulative').print_stats(20)  # Top 10 slowest functions
 
 fen = '5k2/R7/3K4/4p3/5P2/8/8/5r2 w - - 0 0'
 a = concat_fen_legal_bits(fen)
 b = concat_fen_legal(fen)
 
-print(a[0])
-print(b[0])
+print(a[13])
+print(b[13])
+print(np.array_equal(a,b))
+print(np.argwhere(a != b))
 

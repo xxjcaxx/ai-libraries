@@ -242,7 +242,8 @@ BitboardArray legal_moves_to_64_bitboards(const Board &board)
         if (codes.find(move_vector) != codes.end())
         {
             int code_index = codes[move_vector];
-            int bit_position = (7 - from_rank) * 8 + from_file; // Mapeo 2D a 1D
+           // int bit_position = (7 - from_rank) * 8 + from_file; // Mapeo 2D a 1D
+            int bit_position = from_rank * 8 + from_file; // Mapeo 2D a 1D
             bitboards[code_index] |= (1ULL << bit_position); // Activar bit en la posición correcta
         }
     }
@@ -397,12 +398,13 @@ const PackedArray* concat_fen_legal_bits(const char *fen)
     // Copiar los 64 elementos del array después del vector
     std::copy(legal_moves.begin(), legal_moves.end(), combinedArray.begin() + fen_matrix.size());
 
-    for (size_t i = 0; i < combinedArray.size(); ++i) {
-      uint64_t value = combinedArray[i];
-      for (size_t j = 0; j < 8; ++j) {
-          result[i * 8 + j] = static_cast<uint8_t>((value >> (j * 8)) & 0xFF);
-      }
-  }
+ for (size_t i = 0; i < combinedArray.size(); ++i) {
+    uint64_t value = combinedArray[i];
+    for (size_t j = 0; j < 8; ++j) {
+        // Invertimos el orden de los bytes
+        result[i * 8 + (7 - j)] = static_cast<uint8_t>((value >> (j * 8)) & 0xFF);
+    }
+}
 
     return &result;
   }
