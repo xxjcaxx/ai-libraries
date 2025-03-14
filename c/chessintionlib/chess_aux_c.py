@@ -74,7 +74,7 @@ def concat_fen_legal_bits(fen):
     compressed_array = np.frombuffer(result_ptr.contents, dtype=np.uint64)
     
     # Convertir a tensor en CUDA
-    compressed_tensor = torch.from_numpy(compressed_array).to(dtype=torch.uint64, device="cuda")
+    compressed_tensor = torch.from_numpy(compressed_array).to(dtype=torch.int64, device="cuda")
 
     # Expande los bits con una operación eficiente
     bit_positions = torch.arange(8, dtype=torch.int64, device="cuda")  # Usar int64 para arange
