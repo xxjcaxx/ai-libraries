@@ -88,5 +88,5 @@ def concat_fen_legal_ptr(fen):
     fen_bytes = fen.encode('utf-8')
     
     # Llamar a la función de la librería compartida
-    return = chess_extension.concat_fen_legal_bits(fen_bytes)
+    return chess_extension.concat_fen_legal_bits(fen_bytes)
     
