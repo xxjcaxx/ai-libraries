@@ -68,17 +68,17 @@ def concat_fen_legal_bits(fen):
     # Llamar a la función de la librería compartida
     result_ptr = chess_extension.concat_fen_legal_bits(fen_bytes)
     
-    # Convertir el puntero en un array NumPy de uint64
+    if not result_ptr:
+        raise RuntimeError("Error al obtener el puntero de la función C++")
+    
+    # Convertir el puntero en un array NumPy sin copias innecesarias
     compressed_array = np.frombuffer(result_ptr.contents, dtype=np.uint64)
     
-    # Convertir uint64 a uint8 antes de unpackbits
-    bit_array = np.unpackbits(compressed_array.view(np.uint8)).astype(np.uint64)
-    
-    # Ajustar la forma (reshape) al formato esperado (77, 8, 8)
-    array_np = bit_array.reshape(77, 8, 8)
-    
-    # Mostrar sin truncar
-    #np.set_printoptions(threshold=np.inf)
-    #print(array_np)
+    # Convertir a tensor en CUDA
+    compressed_tensor = torch.from_numpy(compressed_array).to(dtype=torch.uint64, device="cuda")
 
-    return array_np
+    # Expande los bits con una operación eficiente
+    bit_tensor = torch.bitwise_and(torch.bitwise_right_shift(compressed_tensor[:, None], torch.arange(8, device="cuda")), 1).bool()
+
+    # Darle forma (77, 8, 8)
+    return bit_tensor.view(77, 8, 8)
