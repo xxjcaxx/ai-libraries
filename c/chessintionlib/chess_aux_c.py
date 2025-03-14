@@ -82,3 +82,11 @@ def concat_fen_legal_bits(fen):
 
     # Darle forma (77, 8, 8)
     return bit_tensor.view(77, 8, 8)
+
+
+def concat_fen_legal_ptr(fen):
+    fen_bytes = fen.encode('utf-8')
+    
+    # Llamar a la función de la librería compartida
+    return = chess_extension.concat_fen_legal_bits(fen_bytes)
+    
