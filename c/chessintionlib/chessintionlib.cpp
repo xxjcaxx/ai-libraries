@@ -1,6 +1,11 @@
 #include "../chess-library-master/include/chess.hpp"
 #include <map>    // Include this for std::map
 #include <vector> // Needed for std::vector
+#include <array>
+#include <cstring>  // Para memcpy
+#include <iostream>
+#include <string>
+#include <algorithm> // Para std::copy
 
 extern "C"
 {
@@ -397,14 +402,23 @@ const PackedArray* concat_fen_legal_bits(const char *fen)
 
     // Copiar los 64 elementos del array después del vector
     std::copy(legal_moves.begin(), legal_moves.end(), combinedArray.begin() + fen_matrix.size());
-
+/*
  for (size_t i = 0; i < combinedArray.size(); ++i) {
     uint64_t value = combinedArray[i];
     for (size_t j = 0; j < 8; ++j) {
         // Invertimos el orden de los bytes
         result[i * 8 + (7 - j)] = static_cast<uint8_t>((value >> (j * 8)) & 0xFF);
     }
-}
+}*/
+uint8_t* resultPtr = result.data();  // Obtener un puntero a los datos subyacentes del std::array
+    
+    for (size_t i = 0; i < combinedArray.size(); ++i) {
+        uint64_t value = combinedArray[i];
+        
+        // Usamos memcpy para copiar los 8 bytes de cada uint64_t en result
+        std::memcpy(&resultPtr[i * 8], &value, sizeof(uint64_t));
+        std::reverse(&resultPtr[i * 8], &resultPtr[i * 8 + 8]);
+    }
 
     return &result;
   }

@@ -67,13 +67,13 @@ def bench(n):
         for j in fen_collection: 
             a = concat_fen_legal_bits(j)
             b = concat_fen_legal(j)
-            print(np.array_equal(a, b))
+            #print(np.array_equal(a, b))
 
-#cProfile.run('bench(2)', 'output.prof')
+cProfile.run('bench(2000)', 'output.prof')
 
-# Print sorted profiling results (100 simulations) 19.466 seconds
-#p = pstats.Stats('output.prof')
-#p.strip_dirs().sort_stats('cumulative').print_stats(20)  # Top 10 slowest functions
+#Print sorted profiling results (100 simulations) 19.466 seconds
+p = pstats.Stats('output.prof')
+p.strip_dirs().sort_stats('cumulative').print_stats(20)  # Top 10 slowest functions
 
 fen = '5k2/R7/3K4/4p3/5P2/8/8/5r2 w - - 0 0'
 a = concat_fen_legal_bits(fen)
