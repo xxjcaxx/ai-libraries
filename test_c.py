@@ -20,6 +20,7 @@ def concat_fen_legal(fen):
     compressed_array = np.frombuffer(result_ptr.contents, dtype=np.uint8)
     bit_array = np.unpackbits(compressed_array).astype(np.uint8)
     array_np = bit_array.reshape(77, 8, 8)
+    return array_np
     #np.set_printoptions(threshold=np.inf)
     #print(array_np)
 
@@ -35,7 +36,7 @@ def concat_fen_legal_bits(fen):
     #np.set_printoptions(threshold=np.inf)
     #print(array_np)
 
-    #return array_np
+    return array_np
 
 
 
@@ -75,21 +76,9 @@ p = pstats.Stats('output.prof')
 p.strip_dirs().sort_stats('cumulative').print_stats(20)  # Top 10 slowest functions
 
 fen = '5k2/R7/3K4/4p3/5P2/8/8/5r2 w - - 0 0'
-fen_bytes = fen.encode('utf-8')
-result_ptr = chess_extension.concat_fen_legal(fen_bytes)
-print(list(result_ptr.contents))
-result_ptr_bits = chess_extension.concat_fen_legal_bits(fen_bytes)
-print(list(result_ptr.contents))
-compressed_array = np.array(result_ptr.contents, dtype=np.uint8)
-compressed_array_bits = np.array(result_ptr_bits.contents, dtype=np.uint8)
-print(compressed_array)
-#print(list(result_ptr.contents),list(result_ptr_bits.contents))
-#print(np.array_equal(compressed_array, compressed_array_bits))
+a = concat_fen_legal_bits(fen)
+b = concat_fen_legal(fen)
 
-result_ptr = chess_extension.concat_fen_legal(fen_bytes)
-print("Address result_ptr:", hex(ctypes.addressof(result_ptr.contents)))
-print("Data result_ptr:", list(result_ptr.contents))
+print(a[0])
+print(b[0])
 
-result_ptr_bits = chess_extension.concat_fen_legal_bits(fen_bytes)
-print("Address result_ptr_bits:", hex(ctypes.addressof(result_ptr_bits.contents)))
-print("Data result_ptr (again):", list(result_ptr.contents))  # Debería haber cambiado a ceros

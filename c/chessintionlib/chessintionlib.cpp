@@ -349,9 +349,7 @@ BitboardArray legal_moves_to_64_bitboards(const Board &board)
       (*fen_matrix_legal_moves)[13 + i] = legal_moves[i];
     }
 
-    //std::cout << "Concatenated board and legal moves generated!" << std::endl;
 
-    //return &(*fen_matrix_legal_moves)[0][0][0];
     int bit_index = 0;
     for (int i = 0; i < 77; i++) {
         for (int j = 0; j < 8; j++) {
@@ -369,16 +367,6 @@ BitboardArray legal_moves_to_64_bitboards(const Board &board)
 
     return &packed_data;
   }
-
-  int add(int a, int b)
-  {
-    return a + b;
-  }
-
-
-
-
-
 
 
 
@@ -418,6 +406,5 @@ const PackedArray* concat_fen_legal_bits(const char *fen)
 
     return &result;
   }
-
 
 }
