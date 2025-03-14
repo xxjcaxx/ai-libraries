@@ -77,7 +77,8 @@ def concat_fen_legal_bits(fen):
     compressed_tensor = torch.from_numpy(compressed_array).to(dtype=torch.uint64, device="cuda")
 
     # Expande los bits con una operación eficiente
-    bit_tensor = torch.bitwise_and(torch.bitwise_right_shift(compressed_tensor[:, None], torch.arange(8, dtype=torch.int64, device="cuda").to(torch.uint64)), 1).bool()
+    bit_positions = torch.arange(8, dtype=torch.int64, device="cuda")  # Usar int64 para arange
+    bit_tensor = torch.bitwise_and(torch.bitwise_right_shift(compressed_tensor[:, None], bit_positions), 1).bool()
 
     # Darle forma (77, 8, 8)
     return bit_tensor.view(77, 8, 8)
