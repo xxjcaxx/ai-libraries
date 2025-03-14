@@ -389,7 +389,7 @@ PackedArray result = {}; // Inicializar con ceros
 
 const PackedArray* concat_fen_legal_bits(const char *fen)
   {
-    packed_data = {};
+    result = {};
     std::string fen_string(fen);
    // std::cerr << "fen:" << fen_string << std::endl;
 
