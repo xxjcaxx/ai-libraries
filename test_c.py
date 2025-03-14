@@ -9,7 +9,7 @@ chess_extension.concat_fen_legal.argtypes = [ctypes.c_char_p]
 chess_extension.concat_fen_legal.restype = ctypes.POINTER(ctypes.c_uint8 * 616)
 
 chess_extension.concat_fen_legal_bits.argtypes = [ctypes.c_char_p]
-chess_extension.concat_fen_legal_bits.restype = ctypes.POINTER(ctypes.c_uint64 * 77)
+chess_extension.concat_fen_legal_bits.restype = ctypes.POINTER(ctypes.c_uint8 * 616)
 
 def concat_fen_legal(fen):
     fen_bytes = fen.encode('utf-8')
@@ -26,19 +26,10 @@ def concat_fen_legal(fen):
 def concat_fen_legal_bits(fen):
     fen_bytes = fen.encode('utf-8')
     
-    # Llamar a la función de la librería compartida
-    result_ptr = chess_extension.concat_fen_legal_bits(fen_bytes)
-    
-    # Convertir el puntero en un array NumPy de uint64
-    compressed_array = np.frombuffer(result_ptr.contents, dtype=np.uint64)
-    
-    # Convertir uint64 a uint8 antes de unpackbits
-    bit_array = np.unpackbits(compressed_array.view(np.uint8)).astype(np.uint64)
-    
-    # Ajustar la forma (reshape) al formato esperado (77, 8, 8)
+    result_ptr = chess_extension.concat_fen_legal(fen_bytes)
+    compressed_array = np.frombuffer(result_ptr.contents, dtype=np.uint8)
+    bit_array = np.unpackbits(compressed_array).astype(np.uint8)
     array_np = bit_array.reshape(77, 8, 8)
-    
-    # Mostrar sin truncar
     np.set_printoptions(threshold=np.inf)
     print(array_np)
 

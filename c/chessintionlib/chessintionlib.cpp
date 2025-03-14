@@ -385,9 +385,9 @@ BitboardArray legal_moves_to_64_bitboards(const Board &board)
 ////////// con bits
 
 using CombinedArray = std::array<uint64_t, 77>; // 77 elementos
-CombinedArray result = {}; // Inicializar con ceros
+PackedArray result = {}; // Inicializar con ceros
 
-const CombinedArray* concat_fen_legal_bits(const char *fen)
+const PackedArray* concat_fen_legal_bits(const char *fen)
   {
     packed_data = {};
     std::string fen_string(fen);
@@ -401,13 +401,20 @@ const CombinedArray* concat_fen_legal_bits(const char *fen)
 
   
 
-    result = {}; // Inicializar con ceros
+    CombinedArray combinedArray  = {}; // Inicializar con ceros
 
     // Copiar los 13 elementos del vector en las primeras posiciones
-    std::copy(fen_matrix.begin(), fen_matrix.end(), result.begin());
+    std::copy(fen_matrix.begin(), fen_matrix.end(), combinedArray.begin());
 
     // Copiar los 64 elementos del array después del vector
-    std::copy(legal_moves.begin(), legal_moves.end(), result.begin() + fen_matrix.size());
+    std::copy(legal_moves.begin(), legal_moves.end(), combinedArray.begin() + fen_matrix.size());
+
+    for (size_t i = 0; i < combinedArray.size(); ++i) {
+      uint64_t value = combinedArray[i];
+      for (size_t j = 0; j < 8; ++j) {
+          result[i * 8 + j] = static_cast<uint8_t>((value >> (j * 8)) & 0xFF);
+      }
+  }
 
     return &result;
   }
