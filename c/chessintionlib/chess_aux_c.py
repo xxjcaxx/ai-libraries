@@ -31,7 +31,7 @@ chess_extension.concat_fen_legal.argtypes = [ctypes.c_char_p]
 chess_extension.concat_fen_legal.restype = ctypes.POINTER(ctypes.c_uint8 * 616)
 
 chess_extension.concat_fen_legal_bits.argtypes = [ctypes.c_char_p]
-chess_extension.concat_fen_legal_bits.restype = ctypes.POINTER(ctypes.c_uint64 * 77)
+chess_extension.concat_fen_legal_bits.restype = ctypes.POINTER(ctypes.c_uint8 * 616)
 
 
 def uci_to_number(uci_move):
