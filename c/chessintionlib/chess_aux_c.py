@@ -11,8 +11,7 @@ chess_extension = ctypes.CDLL('ai-libraries/c/chessintionlib/libchessintionlib.s
 Matrix3D77 = ctypes.POINTER(ctypes.c_int)
 
 # Define function signatures
-chess_extension.board_to_matrix.argtypes = [ctypes.c_void_p, ctypes.c_int]
-chess_extension.board_to_matrix.restype = ctypes.POINTER(ctypes.c_int)
+
 
 chess_extension.board_to_3D_matrix.argtypes = [ctypes.c_void_p]
 chess_extension.board_to_3D_matrix.restype = ctypes.POINTER(ctypes.c_int)
