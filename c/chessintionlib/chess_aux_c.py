@@ -64,7 +64,11 @@ def concat_fen_legal(fen):
 def concat_fen_legal_bits(fen):
     fen_bytes = fen.encode('utf-8')
     board_ptr =   chess_extension.concat_fen_legal_bits(fen_bytes)
-    compressed_tensor = torch.tensor(list(board_ptr.contents), dtype=torch.uint8, device="cuda")
+    np_array = np.ctypeslib.as_array(board_ptr.contents, shape=(77 * 8,))
+
+    # Crea el tensor directamente desde numpy sin conversión innecesaria
+    compressed_tensor = torch.from_numpy(np_array).to(dtype=torch.uint8, device="cuda")
+
     bit_tensor = ((compressed_tensor[:, None] >> torch.arange(8, device="cuda")) & 1).to(torch.float32)
 
     # Darle forma (77, 8, 8)
