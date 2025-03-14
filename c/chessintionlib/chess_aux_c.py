@@ -63,22 +63,9 @@ def concat_fen_legal(fen):
 
 def concat_fen_legal_bits(fen):
     fen_bytes = fen.encode('utf-8')
-    
-    # Llamar a la función de la librería compartida
-    result_ptr = chess_extension.concat_fen_legal_bits(fen_bytes)
-    
-    if not result_ptr:
-        raise RuntimeError("Error al obtener el puntero de la función C++")
-    
-    # Convertir el puntero en un array NumPy sin copias innecesarias
-    compressed_array = np.frombuffer(result_ptr.contents, dtype=np.uint64)
-    
-    # Convertir a tensor en CUDA
-    compressed_tensor = torch.from_numpy(compressed_array).to(dtype=torch.int64, device="cuda")
-
-    # Expande los bits con una operación eficiente
-    bit_positions = torch.arange(8, dtype=torch.int64, device="cuda")  # Usar int64 para arange
-    bit_tensor = torch.bitwise_and(torch.bitwise_right_shift(compressed_tensor[:, None], bit_positions), 1).bool()
+    board_ptr =  = chess_extension.concat_fen_legal(fen_bytes)
+    compressed_tensor = torch.tensor(list(board_ptr.contents), dtype=torch.uint8, device="cuda")
+    bit_tensor = ((compressed_tensor[:, None] >> torch.arange(8, device="cuda")) & 1).to(torch.float32)
 
     # Darle forma (77, 8, 8)
     return bit_tensor.view(77, 8, 8)
