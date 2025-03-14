@@ -52,7 +52,7 @@ def concat_fen_legal(fen):
     #return reshaped_result
 
     compressed_tensor = torch.tensor(list(result_ptr.contents), dtype=torch.uint8, device="cuda")
-    bit_tensor = ((compressed_tensor[:, None] >> torch.arange(8, device="cuda")) & 1).bool()
+    bit_tensor = ((compressed_tensor[:, None] >> torch.arange(8, device="cuda")) & 1).to(torch.float32)
     bit_tensor = bit_tensor.view(77, 8, 8)
     return bit_tensor
 
